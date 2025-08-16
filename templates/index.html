@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sentiment Prediction</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        textarea { width: 100%; max-width: 600px; }
+        .result-block { background: #f4f6fa; border-radius: 10px; padding: 20px 20px 5px 20px; margin-top: 20px;}
+        h2 { color: #3c5772; }
+        ul { list-style-type: disc; margin-left: 22px; }
+        label { font-weight: bold; }
+        .final { font-size: 1.2em; font-weight: bold; color: #27ae60; }
+    </style>
+</head>
+<body>
+    <h1>Enter Text for Sentiment Analysis</h1>
+    <form method="POST" action="/predict">
+        <label for="input_text">Input Text:</label><br>
+        <textarea id="input_text" name="input_text" rows="4" cols="60">{{ request.form.input_text or '' }}</textarea><br><br>
+        <input type="submit" value="Analyze Sentiment">
+    </form>
+
+    {% if result %}
+        <div class="result-block">
+            <h2>Model-wise Predictions:</h2>
+            <ul>
+                <li><b>Logistic Regression:</b> {{ model_preds['lr'] if 'lr' in model_preds else '-' }}</li>
+                <li><b>KNN:</b> {{ model_preds['knn'] if 'knn' in model_preds else '-' }}</li>
+                <li><b>MultinomialNB:</b> {{ model_preds['nb'] if 'nb' in model_preds else '-' }}</li>
+            </ul>
+            <h2>Majority Opinion:</h2>
+            <p>
+                {{ majority_msg if majority_msg else '---' }}
+            </p>
+            <h2>Final Result:</h2>
+            <p class="final">{{ result }}</p>
+        </div>
+    {% endif %}
+</body>
+</html>
