@@ -72,21 +72,22 @@
 #     app.run(debug=True)
 
 
-
 from flask import Flask, request, render_template
 from sklearn.base import BaseEstimator, TransformerMixin
 import joblib
 
-# Define the custom transformer (MUST BE before pipeline load)
+# Keep TextCleaner here
 class TextCleaner(BaseEstimator, TransformerMixin):
     def fit(self, X, y=None):
         return self
+
     def transform(self, X):
+        # Your preprocessing logic
         return [x.lower().strip() for x in X]
 
 app = Flask(__name__)
 
-# Load your trained pipeline using joblib
+# Load trained pipeline
 model = joblib.load("final_pipeline.pkl")
 
 @app.route("/")
@@ -94,9 +95,9 @@ def home():
     result = ""
     model_preds = {'lr': '-', 'knn': '-', 'nb': '-'}
     majority_msg = ""
-    return render_template("index.html", 
-                           result=result, 
-                           model_preds=model_preds, 
+    return render_template("index.html",
+                           result=result,
+                           model_preds=model_preds,
                            majority_msg=majority_msg)
 
 @app.route("/predict", methods=["POST"])
