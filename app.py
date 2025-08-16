@@ -73,21 +73,20 @@
 
 
 from flask import Flask, request, render_template
-import pickle
+import joblib
 from sklearn.base import BaseEstimator, TransformerMixin
 
-# Define your TextCleaner class here (same as when training)
+# Define your custom transformer (same as during training)
 class TextCleaner(BaseEstimator, TransformerMixin):
     def fit(self, X, y=None):
         return self
     def transform(self, X):
-        # Make sure this matches your training logic!
         return [x.lower().strip() for x in X]
 
 app = Flask(__name__)
 
-# Load your trained pipeline.
-model = pickle.load(open("final_pipeline.pkl", "rb"))
+# Load your trained pipeline using joblib
+model = joblib.load("final_pipeline.pkl")
 
 @app.route("/")
 def home():
